@@ -2,11 +2,15 @@
 
 var express = require('express'),
     cookieParser = require('cookie-parser'),
+    bodyParser = require('body-parser'),
     session = require('express-session'),
     async = require('async'),
     passport = require('passport'),
     GoogleStrategy = require('passport-google').Strategy,
+
     MongoClient = require('mongodb').MongoClient,
+    ObjectID = require('mongodb').ObjectID,
+
     PetController = require('./PetController'),
     UserController = require('./UserController'),
     hostname = 'localhost';
@@ -47,10 +51,10 @@ var Server = function(opts) {
 
 Server.prototype.configureAuthentication = function() {
     passport.serializeUser(function(user, done) {
-        done(null, user.openId);
+        done(null, user._id);
     });
     passport.deserializeUser(function(id, done) {
-        this.models.user.findOne({openId: id}, function(err, user) {
+        this.models.user.findOne({_id: ObjectID(id)}, function(err, user) {
             done(err, user);
         });
     }.bind(this));
@@ -63,8 +67,8 @@ Server.prototype.configureAuthentication = function() {
         this.models.user.findOne({openId: identifier}, /*{limit: 1},*/ function(err, user) {
             if (!user) {
                 this.models.user.insert({openId: identifier, 
-                                         email: profile.emails[0].value,  // First email
-                                         pets: []}, function(err, res) {
+                                         email: profile.emails[0].value},  // First email
+                                         function(err, res) {
                     done(err, res);
                 }.bind(this));
             } else {
@@ -100,6 +104,7 @@ Server.prototype.configureModels = function(callback) {
 //    PUT       /pets               Create a new pets
 Server.prototype.configureEndpoints = function() {
     // Authentication
+    this.app.use(bodyParser());
     this.app.use(cookieParser());
     this.app.use(session({ secret: 'somerandasdfodsecret' }));
     this.app.use(passport.initialize());
@@ -123,6 +128,7 @@ Server.prototype.configureEndpoints = function() {
 
     // Update
     this.app.patch('/pets', 
+        this.ensureAuthenticated,
         this.controllers.pet.update);
 
     // Delete

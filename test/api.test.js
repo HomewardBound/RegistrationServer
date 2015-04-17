@@ -16,7 +16,7 @@ describe('Logging in tests', function() {
             api.get('/').expect(200, done);
         });
 
-        it.only('should not read pets when not authenticated', function(done) {
+        it('should not read pets when not authenticated', function(done) {
             api.get('/pets').expect(302, done);
         });
 
@@ -33,7 +33,7 @@ describe('Logging in tests', function() {
         });
     });
 
-    describe('Authenticated tests', function() {
+    describe.skip('Authenticated tests', function() {
         var petCount;
         before(function() {
             // AUTHENTICATE!
