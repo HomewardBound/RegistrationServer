@@ -1,1 +1,1 @@
-web: NODE_ENV=production npm start
+web: sudo NODE_ENV=production npm start
