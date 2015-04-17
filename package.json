@@ -1,0 +1,32 @@
+{
+  "name": "RegistrationServer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/app.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "express": "^4.12.3",
+    "passport": "^0.2.1",
+    "passport-google": "^0.3.0"
+  },
+  "devDependencies": {
+    "expect": "^1.6.0",
+    "mocha": "^2.2.4",
+    "supertest": "^0.15.0"
+  },
+  "scripts": {
+    "test": "node node_modules/mocha/bin/mocha --recursive test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HomewardBound/RegistrationServer.git"
+  },
+  "author": "Brian Broll",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HomewardBound/RegistrationServer/issues"
+  },
+  "homepage": "https://github.com/HomewardBound/RegistrationServer"
+}
