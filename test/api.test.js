@@ -6,9 +6,6 @@ var supertest = require('supertest'),
     expect = require('expect'),
     Server = require('../src/Server');
 
-describe('Server-DB tests', function() {
-});
-
 describe('Logging in tests', function() {
     before(function(done) {
         new Server({port: port}).start(done);
@@ -19,20 +16,60 @@ describe('Logging in tests', function() {
             api.get('/').expect(200, done);
         });
 
-        it('should not read dogs when not authenticated', function(done) {
+        it.only('should not read pets when not authenticated', function(done) {
             api.get('/pets').expect(302, done);
         });
 
-        it('should not update dog when not authenticated', function(done) {
+        it('should not update pet when not authenticated', function(done) {
             api.patch('/pets').expect(302, done);
         });
 
-        it('should not delete dog when not authenticated', function(done) {
+        it('should not delete pet when not authenticated', function(done) {
             api.delete('/pets').expect(302, done);
         });
 
-        it('should not create dog when not authenticated', function(done) {
+        it('should not create pet when not authenticated', function(done) {
             api.put('/pets').expect(302, done);
+        });
+    });
+
+    describe('Authenticated tests', function() {
+        var petCount;
+        before(function() {
+            // AUTHENTICATE!
+            // How do I fake authentication for testing?
+            // TODO
+        });
+
+        it('should return 200 on create pet', function(done) {
+            api.put('/pets').expect(200, done);
+        });
+
+        it.skip('should get pet list', function(done) {
+            api.get('/pets')
+                .expect(200)
+                .expect({}, done); // FIXME
+        });
+
+        it.skip('should create pet', function(done) {
+            api.put('/pets').expect(200, function checkPet() {
+                // TODO: Check that the pet was added
+                done();
+            });
+        });
+
+        it.skip('should update pet', function(done) {
+            api.patch('/pets').expect(200, function checkPet() {
+                // TODO: Check that the pet was updated
+                done();
+            });
+        });
+
+        it.skip('should delete pet', function(done) {
+            api.delete('/pets').expect(200, function checkPet() {
+                // TODO: Check that the pet was deleted
+                done();
+            });
         });
     });
 });

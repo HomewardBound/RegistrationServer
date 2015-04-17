@@ -1,29 +1,95 @@
 'use strict';
 
 var express = require('express'),
+    cookieParser = require('cookie-parser'),
+    session = require('express-session'),
+    async = require('async'),
     passport = require('passport'),
     GoogleStrategy = require('passport-google').Strategy,
+    MongoClient = require('mongodb').MongoClient,
+    PetController = require('./PetController'),
+    UserController = require('./UserController'),
     hostname = 'localhost';
 
 var Server = function(opts) {
     opts = opts || {};
     this.port = opts.port || 8888;
+    this.mongoUsername = opts.mongoUsername || null;
+    this.mongoPassword = opts.mongoPassword || null;
 
-    // Configure authentication
+    // Configure Models
+    this.mongoURI = 'mongodb://localhost:27017/homeward-bound';
+    this.models = {
+        pet: null,
+        user: null
+    };
+
+    this.configureModels(function() {
+        // Configure Controllers
+        this.controllers = {
+            pet: new PetController(this.models.user, this.models.pet),
+            user: new UserController(this.models.user, this.models.pet)
+        };
+
+        // Configure authentication
+        this.configureAuthentication();
+
+        // Configure app endpoints
+        this.app = express();
+        this.configureEndpoints();
+
+        // If the server has already been started
+        if (this.onStart !== null) {
+            this.start(this.onStart);
+        }
+    }.bind(this));
+};
+
+Server.prototype.configureAuthentication = function() {
+    passport.serializeUser(function(user, done) {
+        done(null, user.openId);
+    });
+    passport.deserializeUser(function(id, done) {
+        this.models.user.findOne({openId: id}, function(err, user) {
+            done(err, user);
+        });
+    }.bind(this));
+
     passport.use(new GoogleStrategy({
         returnURL: 'http://'+hostname+':'+this.port+'/auth/google/return',
         realm: 'http://'+hostname+':'+this.port
     }, function(identifier, profile, done) {
-        console.log('Authenticated! Id:', identifier);
-        done();
-        //User.findOrCreate({openId: identifier}, function(err, user) {
-            //done(err, user);
-        //});
-    }));
+        // Find the user or create the user
+        this.models.user.findOne({openId: identifier}, /*{limit: 1},*/ function(err, user) {
+            if (!user) {
+                this.models.user.insert({openId: identifier, 
+                                         email: profile.emails[0].value,  // First email
+                                         pets: []}, function(err, res) {
+                    done(err, res);
+                }.bind(this));
+            } else {
+                done(err, user);
+            }
+        }.bind(this));
+    }.bind(this)));
+};
 
-    // Configure app endpoints
-    this.app = express();
-    this.configureEndpoints();
+Server.prototype.configureModels = function(callback) {
+    MongoClient.connect(this.mongoURI, function(err, db) {
+        this.models.pet = db.collection('pets');
+        this.models.user = db.collection('users');
+        console.log('Connected to database at', this.mongoURI);
+
+        if (this.mongoUsername && this.mongoPassword) {
+            console.log('Authenticating with mongo...');
+            async.parallel([
+                this.models.pet.authenticate.bind(this, this.mongoUsername, this.mongoPassword),
+                this.models.user.authenticate.bind(this, this.mongoUsername, this.mongoPassword)
+                ], callback);
+        } else {
+            callback();
+        }
+    }.bind(this));
 };
 
 // Endpoints:
@@ -34,6 +100,11 @@ var Server = function(opts) {
 //    PUT       /pets               Create a new pets
 Server.prototype.configureEndpoints = function() {
     // Authentication
+    this.app.use(cookieParser());
+    this.app.use(session({ secret: 'somerandasdfodsecret' }));
+    this.app.use(passport.initialize());
+    this.app.use(passport.session());
+
     this.app.get('/auth/google', passport.authenticate('google'));
     this.app.get('/auth/google/return', 
         passport.authenticate('google', {successRedirect: '/pets',
@@ -47,37 +118,41 @@ Server.prototype.configureEndpoints = function() {
 
     // Get index
     this.app.get('/pets', 
-        passport.authenticate('google'),
-        function(req, res) {
-        res.status(200).send('Works!');
-    });
+        this.ensureAuthenticated,
+        this.controllers.pet.index);
 
     // Update
     this.app.patch('/pets', 
-        passport.authenticate('google'),
-        function(req, res) {
-        // TODO 
-    });
+        this.controllers.pet.update);
 
     // Delete
     this.app.delete('/pets',
-        passport.authenticate('google'),
-        function(req, res) {
-    });
+        this.ensureAuthenticated,
+        this.controllers.pet.destroy);
 
     // Create
     this.app.put('/pets',
-        passport.authenticate('google'),
-        function(req, res) {
-    });
+        this.ensureAuthenticated,
+        this.controllers.pet.create);
+};
+
+Server.prototype.ensureAuthenticated = function(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect('/');
 };
 
 Server.prototype.start = function(callback) {
     callback = callback || function(){};
-    this.app.listen(this.port, function() {
-        console.log('App listening on port', this.port);
-        callback();
-    }.bind(this));
+    if (this.app) {
+        this.app.listen(this.port, function() {
+            console.log('App listening on port', this.port);
+            callback();
+        }.bind(this));
+    } else {
+        this.onStart = callback;
+    }
 };
 
 module.exports = Server;
