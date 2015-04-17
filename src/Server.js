@@ -18,7 +18,7 @@ var express = require('express'),
 var Server = function(opts) {
     opts = opts || {};
     this.port = opts.port || 8888;
-    this.mongoURI = process.env.MONGO_URI || 'localhost:27017/homeward-bound';
+    this.mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/homeward-bound';
 
     // Configure Models
     this.models = {
