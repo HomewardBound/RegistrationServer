@@ -6,12 +6,17 @@ var petFields = [
     'uuid',
     'name'
 ];
+
+var getPetAttributes = function(details) {
+    return R.pick(petFields, details);
+};
+
 var createPet = function(details, owner) {
     if (!validatePet(details) || !owner) {
         return null;
     }
 
-    var pet = R.pick(petFields, details);
+    var pet = getPetAttributes(details);
     pet.owner = owner;
     pet.isMeasuring = false;
     return pet;
@@ -24,6 +29,7 @@ var validatePet = function(pet) {
 
 // Helpers
 module.exports = {
-    createPet: createPet
+    createPet: createPet,
+    getPetAttributes: getPetAttributes
 };
 

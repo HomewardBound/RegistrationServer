@@ -37,29 +37,36 @@ module.exports = function(User, Pet) {
 
         update: function(req, res) {
             // Update pet for the given user
-            console.log('Received update:', req.body);
-            var petId = req.body.petId;
+            var petId = req.body.petId,
+                pet = Utils.getPetAttributes(req.body);
+
+            console.log('Received update:', req.body, 'for', petId);
             assert(!!petId, 'Did not receive pet id');
 
-            Pet.update({_id: ObjectID(petId)}, function(err, result) {
-                if (err) {
-                    return res.status(500);
-                }
-                return res.status(200);
-            });
+            if (pet) {
+                Pet.update({_id: ObjectID(petId)}, {$set: pet}, function(err, result) {
+                    if (err) {
+                        return res.status(500).send(err);
+                    }
+                    return res.status(200).send('Pet has been updated!');
+                });
+            } else {
+                return res.status(400).send('Invalid Request');
+            }
         },
 
         destroy: function(req, res) {
             // Destroy pet for the given user
-            console.log('Received destroy');
             var petId = req.body.petId;
+            console.log('Received destroy for', petId);
+
             assert(!!petId, 'Did not receive pet id');
 
-            Pet.remove({_id: petId}, function(err, result) {
+            Pet.remove({_id: ObjectID(petId)}, function(err, result) {
                 if (err) {
-                    return res.status(500);
+                    return res.status(500).send(err);
                 }
-                return res.status(200);
+                return res.status(200).send('Removed pet');
             });
         }
     };
