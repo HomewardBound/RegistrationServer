@@ -3,5 +3,12 @@ services: mongodb
 node_js:
 - '0.12'
 - '0.11'
-install: 
-    - npm install
+install:
+- npm install
+deploy:
+  provider: heroku
+  api_key:
+    secure: CK9m2hIPo7hP8ww0LfbEqLbZ34wc1B0+xiF0qCikXuQKImhZ0nNbJDkBgS0Bmkt/KvmWzfFi1P+6aD4WiBwELNYGCy11hwONc8ZvHuucxs6y8YQlXKVMZ2m7JlEY/IsUHFxppYNiKbvxrQxYchlaaIMiFOBMBeL3JoNFVV8Cvl8=
+  app: homeward-bound
+  on:
+    repo: HomewardBound/RegistrationServer
