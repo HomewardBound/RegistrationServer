@@ -18,9 +18,7 @@ var express = require('express'),
 var Server = function(opts) {
     opts = opts || {};
     this.port = opts.port || 8888;
-    this.mongoUsername = opts.mongoUsername || null;
-    this.mongoPassword = opts.mongoPassword || null;
-    this.mongoURI = opts.mongoURI || 'mongodb://localhost:27017/homeward-bound';
+    this.mongoURI = process.env.MONGO_URI || 'localhost:27017/homeward-bound';
 
     // Configure Models
     this.models = {
@@ -80,19 +78,14 @@ Server.prototype.configureAuthentication = function() {
 
 Server.prototype.configureModels = function(callback) {
     MongoClient.connect(this.mongoURI, function(err, db) {
+        if (err) {
+            throw new Error(err);
+        }
         this.models.pet = db.collection('pets');
         this.models.user = db.collection('users');
-        console.log('Connected to database at', this.mongoURI);
+        console.log('Connected to database at', this.mongoURI.split('@').pop());
 
-        if (this.mongoUsername && this.mongoPassword) {
-            console.log('Authenticating with mongo...');
-            async.parallel([
-                this.models.pet.authenticate.bind(this, this.mongoUsername, this.mongoPassword),
-                this.models.user.authenticate.bind(this, this.mongoUsername, this.mongoPassword)
-                ], callback);
-        } else {
-            callback();
-        }
+        callback();
     }.bind(this));
 };
 
