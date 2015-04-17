@@ -20,7 +20,7 @@ var Server = function(opts) {
     this.port = opts.port || 8888;
     this.mongoUsername = opts.mongoUsername || null;
     this.mongoPassword = opts.mongoPassword || null;
-    this.mongoURI = opts.mongoURI;
+    this.mongoURI = opts.mongoURI || 'mongodb://localhost:27017/homeward-bound';
 
     // Configure Models
     this.models = {

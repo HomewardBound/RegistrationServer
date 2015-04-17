@@ -1,7 +1,5 @@
 var Server = require('./Server'),
-    opts = {
-        mongoURI: 'mongodb://localhost:27017/homeward-bound'
-        },
+    opts = {},
     server;
 
 // Set config
