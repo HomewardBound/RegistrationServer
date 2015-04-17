@@ -23,6 +23,7 @@
     "supertest": "^0.15.0"
   },
   "scripts": {
+    "start": "node src/app.js",
     "test": "node node_modules/mocha/bin/mocha --recursive test"
   },
   "repository": {
