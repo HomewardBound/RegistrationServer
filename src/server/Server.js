@@ -3,6 +3,7 @@
 var express = require('express'),
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
+    engines = require('consolidate'),
     session = require('express-session'),
     async = require('async'),
     passport = require('passport'),
@@ -97,21 +98,28 @@ Server.prototype.configureModels = function(callback) {
 //    PUT       /pets               Create a new pets
 Server.prototype.configureEndpoints = function() {
     // Authentication
-    this.app.use(bodyParser());
+    this.app.use(bodyParser.json({extended: true}));
+    this.app.use(bodyParser.urlencoded({extended: true}));
     this.app.use(cookieParser());
-    this.app.use(session({ secret: 'somerandasdfodsecret' }));
+    this.app.use(session({resave: false, 
+                          saveUninitialized: false,
+                          secret: 'somerandasdfodsecret'}));
     this.app.use(passport.initialize());
     this.app.use(passport.session());
 
     this.app.get('/auth/google', passport.authenticate('google'));
     this.app.get('/auth/google/return', 
-        passport.authenticate('google', {successRedirect: '/pets',
+        passport.authenticate('google', {successRedirect: '/dashboard',
                                          failureRedirect: '/'}));
 
+    // Views settings
+    this.app.set('views', __dirname + '/../client');
+    this.app.use(express.static(__dirname + '/../client'));
+    this.app.engine('html', engines.mustache);
+    this.app.set('view engine', 'html');
     // Landing page
     this.app.get('/', function(req, res) {
-        // TODO: Send an html page...
-        res.sendFile(__dirname+'/index.html');
+        res.render('/index');
     });
 
     // Get index
@@ -133,6 +141,13 @@ Server.prototype.configureEndpoints = function() {
     this.app.put('/pets',
         this.ensureAuthenticated,
         this.controllers.pet.create);
+
+    // User dashboard
+    this.app.get('/dashboard',
+        this.ensureAuthenticated,
+        function(req, res) {
+            res.render('dashboard');
+        });
 };
 
 Server.prototype.ensureAuthenticated = function(req, res, next) {
