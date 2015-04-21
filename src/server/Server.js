@@ -14,7 +14,7 @@ var express = require('express'),
 
     PetController = require('./PetController'),
     UserController = require('./UserController'),
-    hostname = 'localhost';
+    hostname = process.env.HOST || 'localhost'; // TODO: Update to OAuth2
 
 var Server = function(opts) {
     opts = opts || {};
