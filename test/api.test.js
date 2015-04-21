@@ -4,7 +4,7 @@ var supertest = require('supertest'),
     port = 8493,
     api = supertest('http://localhost:'+port),  // https?
     expect = require('expect'),
-    Server = require('../src/Server');
+    Server = require('../src/server/Server');
 
 describe('Logging in tests', function() {
     before(function(done) {

@@ -1,7 +1,7 @@
 /*globals describe,it,before,beforeEach*/
 'use strict';
 
-var Utils = require('../src/Utils'),
+var Utils = require('../src/server/Utils'),
     expect = require('expect');
 
 describe('Utils', function() {
