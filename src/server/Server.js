@@ -148,7 +148,7 @@ Server.prototype.configureEndpoints = function() {
     );
 
     // Facebook
-    this.app.get('/auth/facebook', passport.authenticate('facebook'));
+    this.app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email'] }));
     this.app.get('/auth/facebook/return', 
         passport.authenticate('facebook', {successRedirect: '/dashboard',
                                            failureRedirect: '/'})
