@@ -8,6 +8,7 @@ var express = require('express'),
     async = require('async'),
     passport = require('passport'),
     GoogleStrategy = require('passport-google-oauth2').Strategy,
+    FacebookStrategy = require('passport-facebook').Strategy,
 
     MongoClient = require('mongodb').MongoClient,
     ObjectID = require('mongodb').ObjectID,
@@ -61,7 +62,7 @@ Server.prototype.configureAuthentication = function() {
     passport.use(new GoogleStrategy({
         clientID: process.env.CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: '/auth/google/return',
+        callbackURL: 'http://'+hostname+'/auth/google/return',
         passReqToCallback: true
     }, function(request, accessToken, profile, done) {
         // Find the user or create the user
@@ -77,6 +78,28 @@ Server.prototype.configureAuthentication = function() {
             }
         }.bind(this));
     }.bind(this)));
+
+    // Facebook
+    passport.use(new FacebookStrategy({
+        clientID: process.env.FACEBOOK_APP_ID,
+        clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+        callbackURL: 'http://'+hostname+'/auth/facebook/return',
+        passReqToCallback: true
+    }, function(accessToken, refreshToken, profile, done) {
+        // Find the user or create the user
+        this.models.user.findOne({facebookId: profile.id}, /*{limit: 1},*/ function(err, user) {
+            if (!user) {
+                this.models.user.insert({facebookId: profile.id, 
+                                         email: profile.emails[0].value},  // First email
+                                         function(err, res) {
+                    done(err, res);
+                }.bind(this));
+            } else {
+                done(err, user);
+            }
+        }.bind(this));
+    }.bind(this)));
+
 };
 
 Server.prototype.configureModels = function(callback) {
@@ -109,15 +132,25 @@ Server.prototype.configureEndpoints = function() {
     this.app.use(passport.initialize());
     this.app.use(passport.session());
 
+    // Google
     this.app.get('/auth/google', passport.authenticate('google',
         { scope: [
             'https://www.googleapis.com/auth/userinfo.email'  // Get the email address
         ]}
     ));
+
     this.app.get('/auth/google/return', function() {
         passport.authenticate('google', {successRedirect: '/dashboard',
                                          failureRedirect: '/'});
     });
+
+    // Facebook
+    this.app.get('/auth/facebook', passport.authenticate('facebook'));
+    this.app.get('/auth/facebook/return', function() {
+        passport.authenticate('facebook', {successRedirect: '/dashboard',
+                                           failureRedirect: '/'});
+    });
+
 
     // Views settings
     this.app.set('views', __dirname + '/../client');
