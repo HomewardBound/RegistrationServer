@@ -61,7 +61,7 @@ Server.prototype.configureAuthentication = function() {
     passport.use(new GoogleStrategy({
         clientID: process.env.CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: 'http://'+hostname+':'+this.port+'/auth/google/return',
+        callbackURL: '/auth/google/return',
         passReqToCallback: true
     }, function(request, accessToken, profile, done) {
         // Find the user or create the user
