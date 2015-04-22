@@ -51,6 +51,7 @@ var Server = function(opts) {
 
 Server.prototype.configureAuthentication = function() {
     passport.serializeUser(function(user, done) {
+        console.log('User is', user);
         done(null, user._id);
     });
     passport.deserializeUser(function(id, done) {
@@ -66,9 +67,11 @@ Server.prototype.configureAuthentication = function() {
         passReqToCallback: true
     }, function(request, accessToken, profile, done) {
         // Find the user or create the user
-        this.models.user.findOne({googleId: profile.id}, /*{limit: 1},*/ function(err, user) {
+        this.models.user.findOne({accountId: profile.id, 
+                                  accountType: 'Google'}, /*{limit: 1},*/ function(err, user) {
             if (!user) {
-                this.models.user.insert({googleId: profile.id, 
+                this.models.user.insert({accountId: profile.id, 
+                                         accountType: 'Google',
                                          email: profile.emails[0].value},  // First email
                                          function(err, res) {
                     done(err, res);
@@ -90,9 +93,11 @@ Server.prototype.configureAuthentication = function() {
         // Check vars
         console.log('profile is:', Object.keys(profile));
 
-        this.models.user.findOne({facebookId: profile.id}, /*{limit: 1},*/ function(err, user) {
+        this.models.user.findOne({accountId: profile.id, 
+                                  accountType: 'Facebook'}, /*{limit: 1},*/ function(err, user) {
             if (!user) {
-                this.models.user.insert({facebookId: profile.id, 
+                this.models.user.insert({accountId: profile.id, 
+                                         accountType: 'Facebook',
                                          email: profile.emails[0].value},  // First email
                                          function(err, res) {
                     done(err, res);
