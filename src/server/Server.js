@@ -85,9 +85,11 @@ Server.prototype.configureAuthentication = function() {
         clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
         callbackURL: 'http://'+hostname+'/auth/facebook/return',
         passReqToCallback: true
-    }, function(accessToken, refreshToken, profile, done) {
+    }, function(token, accessToken, refreshToken, profile, done) {
         // Find the user or create the user
-        console.log('Args are:', arguments);
+        // Check vars
+        console.log('profile is:', Object.keys(profile));
+
         this.models.user.findOne({facebookId: profile.id}, /*{limit: 1},*/ function(err, user) {
             if (!user) {
                 this.models.user.insert({facebookId: profile.id, 
