@@ -87,6 +87,7 @@ Server.prototype.configureAuthentication = function() {
         passReqToCallback: true
     }, function(accessToken, refreshToken, profile, done) {
         // Find the user or create the user
+        console.log('Args are:', arguments);
         this.models.user.findOne({facebookId: profile.id}, /*{limit: 1},*/ function(err, user) {
             if (!user) {
                 this.models.user.insert({facebookId: profile.id, 
