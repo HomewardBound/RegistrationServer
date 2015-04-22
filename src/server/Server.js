@@ -114,9 +114,10 @@ Server.prototype.configureEndpoints = function() {
             'https://www.googleapis.com/auth/userinfo.email'  // Get the email address
         ]}
     ));
-    this.app.get('/auth/google/return', 
+    this.app.get('/auth/google/return', function() {
         passport.authenticate('google', {successRedirect: '/dashboard',
-                                         failureRedirect: '/'}));
+                                         failureRedirect: '/'});
+    });
 
     // Views settings
     this.app.set('views', __dirname + '/../client');
