@@ -100,7 +100,7 @@ Server.prototype.configureAuthentication = function() {
                                          accountType: 'Facebook',
                                          email: profile.emails[0].value},  // First email
                                          function(err, res) {
-                    done(err, res);
+                    done(err, res[0]);
                 }.bind(this));
             } else {
                 done(err, user);
