@@ -4,10 +4,14 @@ var supertest = require('supertest'),
     port = 8493,
     api = supertest('http://localhost:'+port),  // https?
     expect = require('expect'),
+    dotenv = require('dotenv'),
     Server = require('../src/server/Server');
 
 describe('Logging in tests', function() {
     before(function(done) {
+        console.log('before process.env.CLIENT_ID', process.env.CLIENT_ID);
+        dotenv.load();
+        console.log('process.env.CLIENT_ID', process.env.CLIENT_ID);
         new Server({port: port}).start(done);
     });
 
