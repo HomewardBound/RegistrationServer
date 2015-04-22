@@ -139,17 +139,17 @@ Server.prototype.configureEndpoints = function() {
         ]}
     ));
 
-    this.app.get('/auth/google/return', function() {
+    this.app.get('/auth/google/return',
         passport.authenticate('google', {successRedirect: '/dashboard',
-                                         failureRedirect: '/'});
-    });
+                                         failureRedirect: '/'})
+    );
 
     // Facebook
     this.app.get('/auth/facebook', passport.authenticate('facebook'));
-    this.app.get('/auth/facebook/return', function() {
+    this.app.get('/auth/facebook/return', 
         passport.authenticate('facebook', {successRedirect: '/dashboard',
-                                           failureRedirect: '/'});
-    });
+                                           failureRedirect: '/'})
+    );
 
 
     // Views settings
