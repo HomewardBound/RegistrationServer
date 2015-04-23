@@ -82,7 +82,7 @@ Server.prototype.configureEndpoints = function() {
 
     // Create
     this.app.put('/pets', function(req, res) {
-        var petId = req.body.petId,
+        var petId = req.body.uuid,
             pet = R.merge(defaultPet, R.omit(['petId'], req.body));
 
         console.log('req.body', req.body);
