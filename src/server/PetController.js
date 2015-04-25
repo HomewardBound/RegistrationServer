@@ -34,11 +34,11 @@ module.exports = function(User, Pet, Location) {
                         pet.locations = null;
                         return pet;
                     }
-                }, function callback(err) {
+                }, function callback(err, results) {
                     if (err) {
                         res.status(500).json(err);
                     } else {
-                        res.status(200).json(pets);
+                        res.status(200).json(results);
                     }
                 });
             });
