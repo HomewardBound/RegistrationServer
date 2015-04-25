@@ -35,7 +35,9 @@ function(_,
         };
         req.open(type, '/pets', true);
         req.setRequestHeader("Content-Type", "application/json");
-        req.setRequestHeader("Content-Length", c.length);
+        if (type.toLowerCase() !== 'get') {
+            req.setRequestHeader("Content-Length", c.length);
+        }
         req.send(JSON.stringify(content));
     };
 
