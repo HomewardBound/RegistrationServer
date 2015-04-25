@@ -15,25 +15,28 @@ module.exports = function(User, Pet, Location) {
                 //     if the dog is missing: get the locations
                 //     else:                  remove the locations
                 console.log('Found pets:', pets);
-                async.map(pets, function addLocations(pet) {
+                async.map(pets, function addLocations(pet, cb) {
+                    console.log('Adding location to '+ pet.name);
                     if (pet.isMeasuring) {  // Add the locations to the pet
                         Location.find({uuid: pet.uuid}).toArray(function(err, locations) {
+                            console.log('Found locations: ',locations, ' ('+pet.name+')');
                             if (err) {
                                 console.error('Could not find locations for '+pet.uuid, err);
                                 locations = [];
                             }
 
                             pet.locations = locations;
-                            return pet;
+                            return cb(null, pet);
                         });
                     } else {  // Clear the locations for the pet
                         Location.remove({uuid: pet.uuid}, function(err, result) {
+                            console.error('Removed locations for ('+pet.name+')');
                             if (err) {
                                 console.error('Could not remove the locations for '+pet.uuid, err);
                             }
                         });
                         pet.locations = null;
-                        return pet;
+                        return cb(null, pet);
                     }
                 }, function callback(err, results) {
                     if (err) {
