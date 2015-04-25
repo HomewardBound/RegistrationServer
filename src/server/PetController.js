@@ -14,6 +14,7 @@ module.exports = function(User, Pet, Location) {
                 // For each missing dog,
                 //     if the dog is missing: get the locations
                 //     else:                  remove the locations
+                console.log('Found pets:', pets);
                 async.map(pets, function addLocations(pet) {
                     if (pet.isMeasuring) {  // Add the locations to the pet
                         Location.find({uuid: pet.uuid}).toArray(function(err, locations) {
@@ -38,6 +39,7 @@ module.exports = function(User, Pet, Location) {
                     if (err) {
                         res.status(500).json(err);
                     } else {
+                        console.log('Responding with', results);
                         res.status(200).json(results);
                     }
                 });
