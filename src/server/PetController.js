@@ -2,15 +2,45 @@
 
 var Utils = require('./Utils'),
     ObjectID = require('mongodb').ObjectID,
+    async = require('async'),
     assert = require('assert');
 
-module.exports = function(User, Pet) {
+module.exports = function(User, Pet, Location) {
     return {
         index: function(req, res) {
             // Get all pets for the given user
             console.log('Received index. User is ', req.user);
             Pet.find({owner: req.user._id}).toArray(function(err, pets) {
-                res.status(200).json(pets);
+                // For each missing dog,
+                //     if the dog is missing: get the locations
+                //     else:                  remove the locations
+                async.map(pets, function addLocations(pet) {
+                    if (pet.isMeasuring) {  // Add the locations to the pet
+                        Location.find({uuid: pet.uuid}).toArray(function(err, locations) {
+                            if (err) {
+                                console.error('Could not find locations for '+pet.uuid, err);
+                                locations = [];
+                            }
+
+                            pet.locations = locations;
+                            return pet;
+                        });
+                    } else {  // Clear the locations for the pet
+                        Location.remove({uuid: pet.uuid}, function(err, result) {
+                            if (err) {
+                                console.error('Could not remove the locations for '+pet.uuid, err);
+                            }
+                        });
+                        pet.locations = null;
+                        return pet;
+                    }
+                }, function callback(err) {
+                    if (err) {
+                        res.status(500).json(err);
+                    } else {
+                        res.status(200).json(pets);
+                    }
+                });
             });
         },
 

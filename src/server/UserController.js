@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function(User, Pet) {
+module.exports = function(User, Pet, Location) {
     return {
         index: function(req, res) {
         },

@@ -9,6 +9,7 @@ var express = require('express'),
     passport = require('passport'),
     GoogleStrategy = require('passport-google-oauth2').Strategy,
     FacebookStrategy = require('passport-facebook').Strategy,
+    FacebookTokenStrategy = require('passport-facebook-token').Strategy,
 
     MongoClient = require('mongodb').MongoClient,
     ObjectID = require('mongodb').ObjectID,
@@ -26,14 +27,15 @@ var Server = function(opts) {
     // Configure Models
     this.models = {
         pet: null,
-        user: null
+        user: null,
+        location: null
     };
 
     this.configureModels(function() {
         // Configure Controllers
         this.controllers = {
-            pet: new PetController(this.models.user, this.models.pet),
-            user: new UserController(this.models.user, this.models.pet)
+            pet: new PetController(this.models.user, this.models.pet, this.models.location),
+            user: new UserController(this.models.user, this.models.pet, this.models.location)
         };
 
         // Configure authentication
@@ -91,26 +93,34 @@ Server.prototype.configureAuthentication = function() {
         clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
         callbackURL: 'http://'+hostname+'/auth/facebook/return',
         passReqToCallback: true
-    }, function(token, accessToken, refreshToken, profile, done) {
-        // Find the user or create the user
-        // Check vars
-        console.log('profile is:', Object.keys(profile));
+    }, this.findOrCreateFacebookUser.bind(this)));
 
-        this.models.user.findOne({accountId: profile.id, 
-                                  accountType: 'Facebook'}, /*{limit: 1},*/ function(err, user) {
-            if (!user) {
-                this.models.user.insert({accountId: profile.id, 
-                                         accountType: 'Facebook',
-                                         email: profile.emails[0].value},  // First email
-                                         function(err, res) {
-                    done(err, res[0]);
-                }.bind(this));
-            } else {
-                done(err, user);
-            }
-        }.bind(this));
-    }.bind(this)));
+    // Mobile Auth
+    passport.use(new FacebookTokenStrategy({
+        clientID: process.env.FACEBOOK_APP_ID,
+        clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+    }, this.findOrCreateFacebookUser.bind(this)));
 
+};
+
+Server.prototype.findOrCreateFacebookUser = function(token, accessToken, refreshToken, profile, done) {
+    // Find the user or create the user
+    // Check vars
+    console.log('profile is:', Object.keys(profile));
+
+    this.models.user.findOne({accountId: profile.id,
+                              accountType: 'Facebook'}, /*{limit: 1},*/ function(err, user) {
+        if (!user) {
+            this.models.user.insert({accountId: profile.id,
+                                     accountType: 'Facebook',
+                                     email: profile.emails[0].value},  // First email
+                                     function(err, res) {
+                done(err, res[0]);
+            }.bind(this));
+        } else {
+            done(err, user);
+        }
+    }.bind(this));
 };
 
 Server.prototype.configureModels = function(callback) {
@@ -120,6 +130,7 @@ Server.prototype.configureModels = function(callback) {
         }
         this.models.pet = db.collection('pets');
         this.models.user = db.collection('users');
+        this.models.location = db.collection('locations');
         console.log('Connected to database at', this.mongoURI.split('@').pop());
 
         callback();
@@ -162,6 +173,17 @@ Server.prototype.configureEndpoints = function() {
             passport.authenticate('facebook', {successRedirect: '/dashboard',
                                                failureRedirect: '/'})
         );
+        // Mobile Auth
+        this.app.post('/auth/facebook/token',
+                     passport.authenticate('facebook-token', { scope: ['email'] }),
+                     function(req, res) {
+                         if (req.user) {
+                             console.log('Authenticated user with a token!');
+                             res.send(200);
+                         }
+                         console.log('Could not authenticate user with a token!');
+                         res.send(400);
+                     });
     }
 
 
