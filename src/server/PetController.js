@@ -9,7 +9,7 @@ module.exports = function(User, Pet, Location) {
     return {
         index: function(req, res) {
             // Get all pets for the given user
-            console.log('Received index. User is ', req.user);
+            console.log('Pets requested for ', req.user);
             Pet.find({owner: req.user._id}).toArray(function(err, pets) {
                 // For each missing dog,
                 //     if the dog is missing: get the locations
