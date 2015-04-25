@@ -16,8 +16,7 @@ var express = require('express'),
 
     PetController = require('./PetController'),
     UserController = require('./UserController'),
-    hostname = process.env.HOST || 'localhost',
-    NO_AUTH = process.env.NO_AUTH || false;
+    hostname = process.env.HOST || 'localhost';
 
 var Server = function(opts) {
     opts = opts || {};
@@ -39,9 +38,7 @@ var Server = function(opts) {
         };
 
         // Configure authentication
-        if (!NO_AUTH) {
-            this.configureAuthentication();
-        }
+        this.configureAuthentication();
 
         // Configure app endpoints
         this.app = express();
@@ -151,40 +148,38 @@ Server.prototype.configureEndpoints = function() {
     this.app.use(session({resave: false, 
                           saveUninitialized: false,
                           secret: 'somerandasdfodsecret'}));
-    if (!NO_AUTH) {
-        this.app.use(passport.initialize());
-        this.app.use(passport.session());
+    this.app.use(passport.initialize());
+    this.app.use(passport.session());
 
-        // Google
-        this.app.get('/auth/google', passport.authenticate('google',
-            { scope: [
-                'https://www.googleapis.com/auth/userinfo.email'  // Get the email address
-            ]}
-        ));
+    // Google
+    this.app.get('/auth/google', passport.authenticate('google',
+        { scope: [
+            'https://www.googleapis.com/auth/userinfo.email'  // Get the email address
+        ]}
+    ));
 
-        this.app.get('/auth/google/return',
-            passport.authenticate('google', {successRedirect: '/dashboard',
-                                             failureRedirect: '/'})
-        );
+    this.app.get('/auth/google/return',
+        passport.authenticate('google', {successRedirect: '/dashboard',
+                                         failureRedirect: '/'})
+    );
 
-        // Facebook
-        this.app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email'] }));
-        this.app.get('/auth/facebook/return', 
-            passport.authenticate('facebook', {successRedirect: '/dashboard',
-                                               failureRedirect: '/'})
-        );
-        // Mobile Auth
-        this.app.post('/auth/facebook/token',
-                     passport.authenticate('facebook-token', { scope: ['email'] }),
-                     function(req, res) {
-                         if (req.user) {
-                             console.log('Authenticated user with a token!');
-                             res.send(200);
-                         }
-                         console.log('Could not authenticate user with a token!');
-                         res.send(400);
-                     });
-    }
+    // Facebook
+    this.app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email'] }));
+    this.app.get('/auth/facebook/return', 
+        passport.authenticate('facebook', {successRedirect: '/dashboard',
+                                           failureRedirect: '/'})
+    );
+    // Mobile Auth
+    this.app.post('/auth/facebook/token',
+                 passport.authenticate('facebook-token', { scope: ['email'] }),
+                 function(req, res) {
+                     if (req.user) {
+                         console.log('Authenticated user with a token!');
+                         res.send(200);
+                     }
+                     console.log('Could not authenticate user with a token!');
+                     res.send(400);
+                 });
 
 
     // Views settings
@@ -226,7 +221,7 @@ Server.prototype.configureEndpoints = function() {
 };
 
 Server.prototype.ensureAuthenticated = function(req, res, next) {
-    if (req.isAuthenticated() || NO_AUTH) {
+    if (req.isAuthenticated()) {
         return next();
     }
     res.redirect('/');
