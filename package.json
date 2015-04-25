@@ -31,6 +31,7 @@
   },
   "scripts": {
     "start": "node src/server/app.js",
+    "start-ui-dev": "node src/server/dev/UiDevServer.js",
     "test": "node node_modules/mocha/bin/mocha --recursive test"
   },
   "repository": {
