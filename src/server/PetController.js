@@ -75,7 +75,7 @@ module.exports = function(User, Pet, Location) {
             var petId = req.body._id,
                 pet = Utils.getPetAttributes(req.body);
 
-            console.log('Received update:', req.body, 'for', petId);
+            console.log('Received update:', pet, 'for', petId);
             assert(!!petId, 'Did not receive pet id');
 
             if (pet) { // Valid changes
@@ -83,6 +83,7 @@ module.exports = function(User, Pet, Location) {
                     if (err) {
                         return res.status(500).send(err);
                     }
+                    console.log('Update result:', result);
                     return res.status(200).send('Pet has been updated!');
                 });
             } else {
