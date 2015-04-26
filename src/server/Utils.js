@@ -2,9 +2,12 @@
 
 var R = require('ramda');
 // Helpers
-var petFields = [
+var requiredPetFields = [
     'uuid',
-    'name',
+    'name'
+];
+
+var petFields = [
     'species',
     'breed',
     'notes',
@@ -13,7 +16,7 @@ var petFields = [
 ];
 
 var getPetAttributes = function(details) {
-    return R.pick(petFields, details);
+    return R.pick(petFields.concat(requiredPetFields), details);
 };
 
 var createPet = function(details, owner) {
@@ -29,7 +32,7 @@ var createPet = function(details, owner) {
 
 var validatePet = function(pet) {
     var hasKey = R.has(R.__, pet);
-    return R.all(hasKey, petFields);
+    return R.all(hasKey, requiredPetFields);
 };
 
 // Helpers
