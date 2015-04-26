@@ -42,7 +42,7 @@ function(_,
     };
 
     Controller.prototype.updatePet = function(pet) {
-        // TODO
+        this._request('PATCH', pet);
     };
 
     Controller.prototype.createPet = function(pet) {

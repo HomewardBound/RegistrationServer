@@ -72,13 +72,13 @@ module.exports = function(User, Pet, Location) {
 
         update: function(req, res) {
             // Update pet for the given user
-            var petId = req.body.petId,
+            var petId = req.body._id,
                 pet = Utils.getPetAttributes(req.body);
 
             console.log('Received update:', req.body, 'for', petId);
             assert(!!petId, 'Did not receive pet id');
 
-            if (pet) {
+            if (pet) { // Valid changes
                 Pet.update({_id: ObjectID(petId)}, {$set: pet}, function(err, result) {
                     if (err) {
                         return res.status(500).send(err);
