@@ -4,7 +4,12 @@ var R = require('ramda');
 // Helpers
 var petFields = [
     'uuid',
-    'name'
+    'name',
+    'species',
+    'breed',
+    'notes',
+    'dateOfBirth',
+    'isMeasuring'
 ];
 
 var getPetAttributes = function(details) {
