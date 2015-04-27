@@ -64,7 +64,8 @@ Server.prototype.configureEndpoints = function() {
             pet = this.pets[petId];
         
         if (pet) {
-            this.pets[petId] = R.merge(pet, R.omit(['petId'], res.body));
+            this.pets[petId] = R.merge(pet, req.body);
+            console.log('Updated pet to', R.merge(pet, req.body));
             return res.status(200).send('Pet has been updated!');
         } 
         return res.status(400).send('Invalid Request');
