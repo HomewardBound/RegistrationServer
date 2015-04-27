@@ -42,7 +42,7 @@ function(_,
     UIManager.prototype.updatePets = function(pets) {
         var html,
             cards = pets.map(function(pet) {
-                return cardTemplate(_.merge(Utils.defaultPet, pet));
+                return cardTemplate(_.merge({}, Utils.defaultPet, pet));
             }.bind(this));
 
         html = cards.join('\n');
