@@ -47,6 +47,8 @@ function(_,
             $('edit-btn-'+pet.uuid).click(this.toggleMissing.bind(this, pet)); // FIXME: Add the edit stuff
 
         }, this);
+        // Add map trigger
+        $('.modal-trigger').leanModal();
 
         document.getElementById('registerPetButton').onclick = this.createPet.bind(this);
     };

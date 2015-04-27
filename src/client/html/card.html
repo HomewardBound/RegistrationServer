@@ -1,12 +1,13 @@
-<div class="col s12 m6 l4"><div class="card">
+<div class="col s12 m6 l4">
+    <div class="card">
         <div class="card-image waves-effect waves-block waves-light">
-            <img class="activator" src="img/default_<%=species%>.png"><!--@brian image-->
-            <span class="card-title activator">
+            <img class="activator" src="img/default_<%=species%>.png">
+            <span class="card-title">
                 <span id="pet-name" class="label activator"><%= name %></span>
                 <% if (isMeasuring) { %>
                 <span class="label activator pet-lost">Missing</span>
                 <a data-target="map-modal" class="modal-trigger">
-                        <i class="small mdi-maps-place white-text tooltipped" data-position="top" data-delay="50" data-tooltip="Last Seen"></i>
+                    <i class="small mdi-maps-place white-text tooltipped" data-position="top" data-delay="50" data-tooltip="Last Seen"></i>
                 </a>
                 <% } else { %>
                 <span class="label activator pet-not-lost">Not Missing</span>
