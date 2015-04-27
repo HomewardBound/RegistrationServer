@@ -6,6 +6,11 @@
  * Made By MaterializeCSS.com
  */
  
+#map-canvas {
+    height: 100%;
+    width: 100%;
+}
+
  body {
      font-family: 'Patrick Hand', cursive;
      font-size: 20px;
