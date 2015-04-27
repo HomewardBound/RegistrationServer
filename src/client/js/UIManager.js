@@ -47,6 +47,8 @@ function(_,
             $('edit-btn-'+pet.uuid).click(this.toggleMissing.bind(this, pet)); // FIXME: Add the edit stuff
 
         }, this);
+
+        document.getElementById('registerPetButton').onclick = this.createPet.bind(this);
     };
 
     /**
@@ -70,8 +72,6 @@ function(_,
             container.innerHTML = content;
 
             // Attach click listeners
-            // TODO
-            document.getElementById('registerPetButton').onclick = this.createPet.bind(this);
         }
 
         this.currentPet = pet;
@@ -84,10 +84,25 @@ function(_,
 
     UIManager.prototype.createPet = function() {
         var name = document.getElementById('name').value,
-            uuid = document.getElementById('uuid').value;
+            uuid = document.getElementById('uuid').value,
+            species = document.getElementById('species').value,
+            isFemale = document.getElementById('isFemale').checked,
+            sex = isFemale ? 'female' : 'male',
+            breed = document.getElementById('breed').value,
+            age = document.getElementById('age').value,
+            isMeasuring = document.getElementById('isMeasuring').checked,
+            notes = document.getElementById('notes').value;
 
         // Get the necessary info
-        this.controller.createPet({name: name, uuid: uuid});
+        this.controller.createPet({name: name, 
+                                   uuid: uuid,
+                                   species: species,
+                                   age: age,
+                                   sex: sex,
+                                   breed: breed,
+                                   isMeasuring: isMeasuring,
+                                   notes: notes
+                                  });
     };
 
     UIManager.prototype.updatePet = function(pet) {

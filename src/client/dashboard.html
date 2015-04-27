@@ -40,23 +40,94 @@
     <!--/Example Missing Pet-->
 
     <!--Add Pet Card-->
-    <div class="col s12 m6 l4"><div class="card">
-            <a id="add-btn" class="btn-large waves-effect waves-light modal-trigger" data-target="add-modal">
+    <div class="col s12 m6 l4">
+        <div class="card">
+            <a id="add-btn" class="modal-trigger btn-large waves-effect waves-light" href="#add-modal">
                 <span id="plus">+</span> Add a Pet
             </a>
-        </div></div>
-        <!--/Add Pet Card-->
+        </div>
+        <div id="add-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-close"><i class="modal-close mdi-navigation-close right"></i></div>
+                <h4>Add a Pet</h4>
+                <form>
+                    <div class="row">
+                        <!--Pet Name-->
+                        <div class="input-field col s12">
+                            <input id="name" type="text" class="validate" />
+                            <label for="name">Pet's Name</label>
+                        </div>
+                        <!-- Beacon UUID FIXME: Change this to the using the phone sensor-->
+                        <div class="input-field col s12">
+                            <input id="uuid" type="text" class="validate"/>
+                            <label for="uuid">Beacon UUID</label>
+                        </div>
+                        <!--Type-->
+                        <div class="input-field col s12 m6">
+                            <select id="species" class="browser-default">
+                                <option value="" disabled selected>Type of Pet</option>
+                                <option value="dog">Dog</option>
+                                <option value="cat">Cat</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <!--Sex-->
+                        <div class="input-field col s12 m6">
+                            <div class="row">
+                                <div class="col s6">
+                                    <input name="sex" type="radio" class="with-gap" id="isFemale" />
+                                    <label for="isFemale">Female</label>
+                                </div>
+                                <div class="col s6">
+                                    <input name="sex" type="radio" class="with-gap" id="male" />
+                                    <label for="male">Male</label> 
+                                </div>
+                            </div>
+                        </div>
+                        <!--Breed-->
+                        <div class="input-field col s12">
+                            <input id="breed" type="text" class="validate">
+                            <label for="breed">Breed</label>
+                        </div>
+                        <!--Age-->
+                        <div class="input-field col s12">
+                            <input id="age" type="text" class="validate">
+                            <label for="age">Age</label>
+                        </div>
+                        <!--Image file-->
+                        <div class="file-field input-field col s12">
+                            <a class="prefix grey-text btn-left grey-text">
+                                <i class="small mdi-file-folder"></i>
+                                <input type="file" />
+                            </a>
+                            <input class="validate" type="text" id="image_file"/>
+                            <label for="image_file">Picture of Pet</label>
+                        </div>
+                        <!--Description-->
+                        <div class="input-field col s12">
+                            <textarea id="notes" class="materialize-textarea" type="text"></textarea>
+                            <label for="notes">Notes</label>
+                        </div>
+                        <!--Switch: Missing or not?-->
+                        <div class="switch col s12 center-align">
+                            <label>
+                                NOT LOST
+                                <input id="isMeasuring" type="checkbox">
+                                <span class="lever"></span>
+                                LOST
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" id="registerPetButton" type="submit" class="btn modal-action modal-close waves-effect waves-green white green-text">Save</a>
+            </div>
+        </div>
+    </div>
+    <!--/Add Pet Card-->
 </div>
 
-<div id="modal1" class="modal">
-    <div class="modal-content">
-        <h4>Modal Header</h4>
-        <p>A bunch of text</p>
-    </div>
-    <div class="modal-footer">
-        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
-    </div>
-</div>
 <!--/Pet List-->
 
 <!--  Scripts-->
