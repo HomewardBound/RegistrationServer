@@ -20,7 +20,8 @@ function(_,
      * @return {undefined}
      */
     Controller.prototype.updatePets = function() {
-        this._request('get', null, function(pets) {
+        this._request('get', null, function(response) {
+            var pets = JSON.parse(response);
             this.pets = pets;
             this.ui.updatePets(pets);
         }.bind(this));
@@ -31,7 +32,7 @@ function(_,
             req = new XMLHttpRequest();
 
         req.onload = function(e) {
-            callback(JSON.parse(req.responseText));
+            callback(req.responseText);
         };
         req.open(type, '/pets', true);
         req.setRequestHeader("Content-Type", "application/json");
@@ -42,7 +43,7 @@ function(_,
     };
 
     Controller.prototype.updatePet = function(pet) {
-        this._request('PATCH', pet);
+        this._request('PATCH', pet, this.updatePets.bind(this));
     };
 
     Controller.prototype.createPet = function(pet) {
