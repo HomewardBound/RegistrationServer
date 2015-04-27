@@ -97,7 +97,7 @@ function(_,
 
     UIManager.prototype.toggleMissing = function(pet) {
         pet.isMeasuring = !pet.isMeasuring;
-        this.controller.updatePet(pet);
+        this.controller.updatePet({isMeasuring: pet.isMeasuring});
     };
 
     UIManager.prototype.createPet = function() {
