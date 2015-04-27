@@ -28,11 +28,15 @@ function(_,
     };
 
     UIManager.prototype._initializeMap = function() {
+        console.log('Initializing map');
         var options = {
             center: {lat: 36.044188, lng: -86.727108},  // FIXME: Add appropriate location
             zoom: 17
-        };
-        this.map = new google.maps.Map(document.getElementById('map-canvas'), options);
+            },
+            container = document.getElementById('map-canvas');
+
+        container.setAttribute('style', 'height:100%; width: 100%;');
+        this.map = new google.maps.Map(container, options);
     };
 
     UIManager.prototype.updatePets = function(pets) {
