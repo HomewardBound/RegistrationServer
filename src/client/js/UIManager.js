@@ -1,4 +1,4 @@
-/*globals define*/
+/*globals google,define*/
 define(['lodash',
        'Utils',
        'text!../html/header.html',
@@ -23,6 +23,16 @@ function(_,
         this.controller = null;
         this.currentPet = null;
         this.pets = [];
+
+        google.maps.event.addDomListener(window, 'load', this._initializeMap.bind(this));
+    };
+
+    UIManager.prototype._initializeMap = function() {
+        var options = {
+            center: {lat: 36.044188, lng: -86.727108},  // FIXME: Add appropriate location
+            zoom: 17
+        };
+        this.map = new google.maps.Map(document.getElementById('map-canvas'), options);
     };
 
     UIManager.prototype.updatePets = function(pets) {

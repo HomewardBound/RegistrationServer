@@ -133,12 +133,13 @@
         <div class="modal-close"><i class="modal-close mdi-navigation-close right"></i></div>
         <h4>Last Known Location</h4>
         <!--MAP embed here-->
-        <iframe
+        <div id="map-canvas"></div>
+        <!--<iframe
           width="450"
           height="250"
           frameborder="0" style="border:0"
-          src="https://www.google.com/maps/embed/v1/view?key=AIzaSyBDDQ1eaSmwt2JD3G7H2R3yyIgmB5swMrA&center=-33.8569,151.2152&zoom=18"> <!--@brian, the API key is something you can get here https://developers.google.com/maps/documentation/embed/guide#api_key --> 
-        </iframe>
+          src="https://www.google.com/maps/embed/v1/view?key=AIzaSyBDDQ1eaSmwt2JD3G7H2R3yyIgmB5swMrA&center=-33.8569,151.2152&zoom=18">  
+      </iframe> -->
         
         
     </div>
@@ -146,6 +147,9 @@
 <!--/Pet List-->
 
 <!--  Scripts-->
+<script type="text/javascript"
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDDQ1eaSmwt2JD3G7H2R3yyIgmB5swMrA">
+</script>
 <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 <script src="js/lib/materialize.js"></script>
 <script src="js/init.js"></script>
