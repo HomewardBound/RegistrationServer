@@ -54,16 +54,17 @@ Server.prototype.configureEndpoints = function() {
 
     // Get index
     this.app.get('/pets', function(req, res) {
+        console.log('Pets are', this.pets);
         res.json(R.values(this.pets));
     }.bind(this));
 
     // Update
     this.app.patch('/pets', function(req, res) {
-        var petId = req.body.petId,
+        var petId = req.body.uuid,
             pet = this.pets[petId];
         
         if (pet) {
-            R.merge(pet, R.omit(['petId'], res.body));
+            this.pets[petId] = R.merge(pet, R.omit(['petId'], res.body));
             return res.status(200).send('Pet has been updated!');
         } 
         return res.status(400).send('Invalid Request');
@@ -71,7 +72,7 @@ Server.prototype.configureEndpoints = function() {
 
     // Delete
     this.app.delete('/pets', function(req, res) {
-        var petId = req.body.petId;
+        var petId = req.body.uuid;
 
         if (this.pets[petId]) {
             delete this.pets[petId];
