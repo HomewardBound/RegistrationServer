@@ -3,18 +3,20 @@ define(['lodash',
        'Utils',
        'text!../html/header.html',
        'text!../html/new.html',
+       'text!../html/card.html',
        'text!../html/content.html'],
 function(_, 
          Utils,
          headerHTML, 
          createNewHTML, 
+         cardHTML, 
          contentHTML) {
 
     'use strict';
 
     // Create a UI Manager
     // Create a Controller
-    var headerTemplate = _.template(headerHTML),
+    var cardTemplate = _.template(cardHTML),
         contentTemplate = _.template(contentHTML);
 
     var UIManager = function() {
@@ -24,23 +26,27 @@ function(_,
     };
 
     UIManager.prototype.updatePets = function(pets) {
-        var names = pets.map(Utils.getAttribute.bind(null, 'name')),
-            html = headerTemplate({pets: pets});
+        var html,
+            cards = pets.map(function(pet) {
+                return cardTemplate(_.merge(Utils.defaultPet, pet));
+            }.bind(this));
+
+        html = cards.join('\n');
 
         // Add the html to the header container
-        var container = document.getElementById('headerContainer');
+        var container = document.getElementById('pet-list-container');
         container.innerHTML = html;
 
-        this.selectPet(this.currentPet || pets[0]);
-
         // Add event listeners for selecting the pet
-        var nodes = container.children,
-            pet;
 
-        for (var i = nodes.length; i--;) {
-            pet = pets[i];
-            nodes[i].onclick = this.selectPet.bind(this, pet);
-        }
+        pets.forEach(function(pet) {
+            var items;
+
+            $('.toggle-missing-'+pet.uuid).click(this.toggleMissing.bind(this, pet));
+
+            $('edit-btn-'+pet.uuid).click(this.toggleMissing.bind(this, pet)); // FIXME: Add the edit stuff
+
+        }, this);
     };
 
     /**
@@ -74,7 +80,6 @@ function(_,
     UIManager.prototype.toggleMissing = function(pet) {
         pet.isMeasuring = !pet.isMeasuring;
         this.controller.updatePet(pet);
-        this.selectPet(pet);
     };
 
     UIManager.prototype.createPet = function() {

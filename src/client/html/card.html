@@ -1,0 +1,67 @@
+<div class="col s12 m6 l4"><div class="card">
+        <div class="card-image waves-effect waves-block waves-light">
+            <img class="activator" src="http://materializecss.com/images/office.jpg"><!--@brian image-->
+            <span class="card-title activator">
+                <span id="pet-name" class="label activator"><%= name %></span>
+                <% if (isMeasuring) { %>
+                <span id="pet-lost" class="label activator">Missing</span>
+                <% } else { %>
+                <span class="label activator pet-not-lost">Not Missing</span>
+                <% } %>
+            </span>
+        </div>
+        <div class="card-content">
+            <div class="center-align">
+                <a id="info-btn" class="btn-flat activator">More Info</a><br>
+                <% if (isMeasuring) { %>
+                <a class="btn-flat found-btn toggle-missing-<%= uuid %>">Report Found!</a><br>
+                <% } else { %>
+                <a class="btn-flat lost-btn toggle-missing-<%= uuid %>">Report Missing</a><br>
+                <% } %>
+                <a class="btn-flat edit-btn-<%= uuid %>">Edit</a>
+            </div>
+        </div>
+        <div class="card-reveal">
+            <div class="card-title grey-text">
+                <i class="mdi-navigation-close right"></i>
+                <span class="pet-name label"><%= name %></span>
+                <% if (isMeasuring) { %>
+                <span class="label pet-lost">Missing</span>
+                <% } else { %>
+                <span class="label pet-not-lost">Not Missing</span>
+                <% } %>
+            </div>
+            <p><table class="info-table">
+                <tr>
+                    <th>Species</th>
+                    <td><%= species %></td>
+                </tr>
+                <tr>
+                    <th>Breed</th>
+                    <td><%= breed %></td>
+                </tr>
+                <tr>
+                    <th>Sex</th>
+                    <td><%= sex %></td>
+                </tr>
+                <tr>
+                    <th>Age</th>
+                    <td><%= dateOfBirth %><!--@brian FIXME: Calculate the age--></td>
+                </tr>
+                <tr>
+                    <th>Notes</th>
+                    <td><%= notes %></td>
+                </tr>
+            </table></p>
+            <div class="center-align">
+                <% if (isMeasuring) { %>
+                <a class="btn-flat found-btn toggle-missing-<%= uuid %>">Report Found!</a><br>
+                <% } else { %>
+                <a class="btn-flat lost-btn toggle-missing-<%= uuid %>">Report Missing</a><br>
+                <% } %>
+                <a href="#" class="btn-flat edit-btn-<%= uuid %>">Edit</a>
+            </div>
+        </div>
+    </div>
+</div>
+

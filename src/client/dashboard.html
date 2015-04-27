@@ -1,27 +1,69 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+  <title>My Pets</title>
 
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.3.0/css/roboto.min.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.3.0/css/material-fullpalette.min.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.3.0/css/ripples.min.css">
-
-
-    <script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.17/require.min.js" data-main="/js/main.js" type="text/javascript" charset="utf-8"></script>
-    <title>Homeward-Bound</title>
+  <!-- CSS  -->
+  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href='http://fonts.googleapis.com/css?family=Patrick+Hand|Permanent+Marker' rel='stylesheet' type='text/css'>
 </head>
 <body>
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <h1>Your pets!</h1>
-                <div id="headerContainer" class="btn-group btn-group-justified">
-                </div>
-                <div id="contentContainer">
-                </div>
-            </div>
-        </div>
+    
+<!--Navbar-->
+<nav class="brown lighten-1" role="navigation">
+    <div class="nav-wrapper white-text">
+        <a href="#" class="brand-logo page-title">My Pets</a>
+        <!--nav links inline (for web)-->
+        <ul id="nav-web" class="right hide-on-small-only">
+            <li><a href="#">Exit</a></li>
+        </ul>
+        <!--nav sidebar (for mobile)-->
+        <ul id="nav-mobile" class="side-nav">
+            <li><a href="#">Sign Out</a></li>
+        </ul>
+        <a href="#" data-activates="nav-mobile" class="button-collapse hide-on-med-and-up">
+            <i class="white-text mdi-navigation-menu"></i>
+        </a>
     </div>
+</nav> 
+<!--/Navbar-->
+
+<!--Pet List-->
+<div class="row">
+    <div id="pet-list-container">
+        <!--Populated on the fly-->
+
+    </div>
+    <!--/Example Missing Pet-->
+
+    <!--Add Pet Card-->
+    <div class="col s12 m6 l4"><div class="card">
+            <a id="add-btn" class="btn-large waves-effect waves-light modal-trigger" data-target="add-modal">
+                <span id="plus">+</span> Add a Pet
+            </a>
+        </div></div>
+        <!--/Add Pet Card-->
+</div>
+
+<div id="modal1" class="modal">
+    <div class="modal-content">
+        <h4>Modal Header</h4>
+        <p>A bunch of text</p>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+    </div>
+</div>
+<!--/Pet List-->
+
+<!--  Scripts-->
+<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="js/lib/materialize.js"></script>
+<script src="js/lib/init.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.17/require.min.js" data-main="/js/main.js" type="text/javascript" charset="utf-8"></script>
+
 </body>
 </html>
