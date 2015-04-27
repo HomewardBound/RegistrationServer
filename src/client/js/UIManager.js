@@ -56,7 +56,9 @@ function(_,
         pets.forEach(function(pet) {
             var items;
 
-            $('.toggle-missing-'+pet.uuid).click(this.toggleMissing.bind(this, pet));
+            $('.toggle-missing').filter(function(i,e) {
+                return e.getAttribute('data-id') === pet.uuid;
+            }).click(this.toggleMissing.bind(this, pet));
 
             $('edit-btn-'+pet.uuid).click(this.toggleMissing.bind(this, pet)); // FIXME: Add the edit stuff
 

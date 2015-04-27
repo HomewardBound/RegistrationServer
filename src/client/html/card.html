@@ -18,9 +18,9 @@
             <div class="center-align">
                 <a id="info-btn" class="btn-flat activator">More Info</a><br>
                 <% if (isMeasuring) { %>
-                <a class="btn-flat found-btn toggle-missing-<%= uuid %>">Report Found!</a><br>
+                <a class="btn-flat found-btn toggle-missing" data-id="<%= uuid %>">Report Found!</a><br>
                 <% } else { %>
-                <a class="btn-flat lost-btn toggle-missing-<%= uuid %>">Report Missing</a><br>
+                <a class="btn-flat lost-btn toggle-missing" data-id="<%= uuid %>">Report Missing</a><br>
                 <% } %>
                 <a class="btn-flat edit-btn-<%= uuid %>">Edit</a>
             </div>
@@ -59,9 +59,9 @@
             </table></p>
             <div class="center-align">
                 <% if (isMeasuring) { %>
-                <a class="btn-flat found-btn toggle-missing-<%= uuid %>">Report Found!</a><br>
+                <a class="btn-flat found-btn toggle-missing" data-id="<%= uuid %>">Report Found!</a><br>
                 <% } else { %>
-                <a class="btn-flat lost-btn toggle-missing-<%= uuid %>">Report Missing</a><br>
+                <a class="btn-flat lost-btn toggle-missing" data-id="<%= uuid %>">Report Missing</a><br>
                 <% } %>
                 <a href="#" class="btn-flat edit-btn-<%= uuid %>">Edit</a>
             </div>
