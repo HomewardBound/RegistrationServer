@@ -35,7 +35,7 @@ function(_,
             },
             container = document.getElementById('map-canvas');
 
-        container.setAttribute('style', 'height:100%; width: 100%;');
+        container.setAttribute('style', 'height: 450px; width: 250px;');
         this.map = new google.maps.Map(container, options);
     };
 
