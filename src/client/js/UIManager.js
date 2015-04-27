@@ -24,7 +24,11 @@ function(_,
         this.currentPet = null;
         this.pets = [];
 
-        google.maps.event.addDomListener(window, 'load', this._initializeMap.bind(this));
+        if (document.readyState === 'complete') {
+            this._initializeMap.bind(this);
+        } else {
+            google.maps.event.addDomListener(window, 'load', this._initializeMap.bind(this));
+        }
     };
 
     UIManager.prototype._initializeMap = function() {
@@ -35,8 +39,8 @@ function(_,
             },
             container = document.getElementById('map-canvas');
 
-        container.setAttribute('style', 'height: 450px; width: 250px;');
         this.map = new google.maps.Map(container, options);
+        google.maps.event.trigger(this.map, 'resize');
     };
 
     UIManager.prototype.updatePets = function(pets) {
@@ -61,10 +65,14 @@ function(_,
             }).click(this.toggleMissing.bind(this, pet));
 
             $('edit-btn-'+pet.uuid).click(this.toggleMissing.bind(this, pet)); // FIXME: Add the edit stuff
+            $('#location-finder').filter(function(i,e) {
+                return e.getAttribute('data-id') === pet.uuid;
+            }).click(this.showLastLocation.bind(this, pet));
+
 
         }, this);
         // Add map trigger
-        $('.modal-trigger').leanModal();
+        //$('.modal-trigger').leanModal();
 
         document.getElementById('registerPetButton').onclick = this.createPet.bind(this);
     };
@@ -121,6 +129,15 @@ function(_,
                                    isMeasuring: isMeasuring,
                                    notes: notes
                                   });
+    };
+
+    UIManager.prototype.showLastLocation = function(pet) {
+        if (pet.locations) {
+        var location = pet.locations.pop();
+        window.location = 'https://www.google.com/maps/@'+location.latitude+
+        ','+location.longitude+',17z';
+        } else {
+        }
     };
 
     UIManager.prototype.updatePet = function(pet) {

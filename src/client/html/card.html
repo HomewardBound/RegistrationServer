@@ -6,9 +6,14 @@
                 <span id="pet-name" class="label activator"><%= name %></span>
                 <% if (isMeasuring) { %>
                 <span class="label activator pet-lost">Missing</span>
-                <a data-target="map-modal" class="modal-trigger">
-                    <i class="small mdi-maps-place white-text tooltipped" data-position="top" data-delay="50" data-tooltip="Last Seen"></i>
+                <% if (locations.length) { %>
+                <a data-target="map-modal">
+                    <i id="location-finder" data-id="<%= uuid %>" class="small mdi-maps-place white-text tooltipped" data-position="top" data-delay="50" data-tooltip="Last Seen"></i>
                 </a>
+                <% } %>
+                <!--<a data-target="map-modal" class="modal-trigger">-->
+                    <!--<i id="location-finder" data-id="<%= uuid %>" class="small mdi-maps-place white-text tooltipped" data-position="top" data-delay="50" data-tooltip="Last Seen"></i>-->
+                <!--</a>-->
                 <% } else { %>
                 <span class="label activator pet-not-lost">Not Missing</span>
                 <% } %>
