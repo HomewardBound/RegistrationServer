@@ -11,10 +11,11 @@ define([], function() {
         name: 'Unknown',
         uuid: 'None',
         breed: 'Unknown',
+        sex: 'male',
         notes: '',
         isMeasuring: false,
         dateOfBirth: 4,  // FIXME
-        species: 'Dog'
+        species: 'dog'
     };
 
     return {
